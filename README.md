@@ -13,4 +13,3 @@
 ### Author 
 Eliott Legendre 
 
-legendre.eliott@gmail.com
