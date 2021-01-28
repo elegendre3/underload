@@ -4,10 +4,13 @@
 
 
 ### TODO
+= filter search results somehow (on language to start with)
+- figure out what to do with the search (how do you combine multiple topics)
+
 - make UI prettier
+
 - combine US and FR headlines
-- Add keywords to filter (and chjose what source it applies to)
-- Also try out keyword search
+- Add keywords to filter (and chose what source it applies to)
 
 
 ### Author 

@@ -172,17 +172,16 @@ class Client(object):
     """Talks to the API"""
 
     def __init__(self, api_key: str):
-        self.key = api_key
+        self.api_key = f'&apiKey={api_key.strip()}'
+        self.base_url = 'http://newsapi.org/v2'
+        self.headlines = '/top-headlines?'
+        self.everything = '/everything?'
 
-    def _get_headlines(self, country_code: str, api_key: str):
-        url = f'http://newsapi.org/v2/top-headlines?country={country_code}&apiKey={api_key}'
-        resp = requests.get(url)
-
+    def _get_headlines(self, country_code: str):
+        url = self.base_url + self.headlines + f'country={country_code}' + self.api_key
+        resp = requests.get(str(url))
         data = resp.json()
-        if data['status'] == 'ok':
-            # print('Retrieved news headlines succesfully.')
-            pass
-        else:
+        if data['status'] != 'ok':
             print(f'Issues retrieving headlines from [{country}] - status: [{data["status"]}]')
         return data
 
@@ -196,13 +195,17 @@ class Client(object):
         if DEV:
             data = dummy_data
         else:
-            data = self._get_headlines(country[1], self.key)
+            data = self._get_headlines(country[1])
 
         return News(data['articles'])
 
-    @staticmethod
-    def search_keyword(self, kw: str) -> News:
-        pass
+    def search_keywords(self, kw: List[str], limit: int = 20) -> News:
+        url = self.base_url + self.everything + f'q={"+".join(kw)}' + self.api_key
+        resp = requests.get(url)
+        data = resp.json()
+        if data['status'] != 'ok':
+            print(f'Issues retrieving articles about [{kw}] - status: [{data["status"]}]')
+        return News(data['articles'][:limit])
 
 
 class HTML(object):
@@ -218,10 +221,13 @@ class HTML(object):
 
 
 if __name__ == "__main__":
-    country = 'fr'  # 'us'
 
     client = Client(get_key())
 
     data = client.get_news()
+    print('HEADLINES')
+    print(data.to_json())
 
+    data = client.search_keywords(['motorsport', 'vettel'])
+    print('SEARCH')
     print(data.to_json())
