@@ -152,12 +152,13 @@ dummy_data = {'status': 'ok', 'totalResults': 38, 'articles': [
 
 class News(object):
     """Class holding a news search result"""
-    def __init__(self, articles: List[Dict]):
+    def __init__(self, articles: List[Dict], title: str = 'Headlines'):
         self.articles = articles
+        self.title = title
 
     def to_html(self):
         # return Styler.simple_html(self.articles)
-        return Styler.advanced_html(self.articles)
+        return Styler.advanced_html(self.articles, self.title)
 
     def to_html_to_file(self, path: Path):
         html_result = self.to_html()
@@ -183,7 +184,7 @@ class Client(object):
         resp = requests.get(str(url))
         data = resp.json()
         if data['status'] != 'ok':
-            print(f'Issues retrieving headlines from [{country}] - status: [{data["status"]}]')
+            print(f'Issues retrieving headlines from [{country_code}] - status: [{data["status"]}]')
         return data
 
     def get_news(self) -> News:
@@ -198,7 +199,7 @@ class Client(object):
         else:
             data = self._get_headlines(country[1])
 
-        return News(data['articles'])
+        return News(data['articles'], 'Headlines')
 
     def search_keywords(self, kw: List[str], limit: int = 20) -> News:
         url = self.base_url + self.everything + f'q={"+".join(kw)}' + self.api_key
@@ -206,7 +207,7 @@ class Client(object):
         data = resp.json()
         if data['status'] != 'ok':
             print(f'Issues retrieving articles about [{kw}] - status: [{data["status"]}]')
-        return News(data['articles'][:limit])
+        return News(data['articles'][:limit], f'Topic: [{", ".join(kw)}]')
 
 
 if __name__ == "__main__":
@@ -217,6 +218,6 @@ if __name__ == "__main__":
     print('HEADLINES')
     print(data.to_json())
 
-    data = client.search_keywords(['motorsport', 'vettel'])
+    data = client.search_keywords(['blink', 'malcolm', 'gladwell'])
     print('SEARCH')
     print(data.to_json())
