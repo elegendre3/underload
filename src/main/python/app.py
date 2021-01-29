@@ -32,8 +32,8 @@ def hello_world():
 
 @app.route('/headlines', methods=['GET'])
 def headlines():
-    client.get_news().to_html_to_file(Path('templates/headlines.html'))
-    return render_template("headlines.html")
+    client.get_news().to_html_to_file(Path('templates/headlines_better.html'))
+    return render_template("headlines_better.html")
 
 
 @app.route('/tailor', methods=['GET'])

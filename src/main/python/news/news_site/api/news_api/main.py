@@ -4,7 +4,7 @@ import requests
 from typing import Dict, List
 
 from news.news_site.api.news_api.key import get_key
-from helpers.html import make_simple_html
+from helpers.html import Styler
 
 DEV = True
 
@@ -156,7 +156,8 @@ class News(object):
         self.articles = articles
 
     def to_html(self):
-        return HTML.headlines_to_html(self.articles)
+        # return Styler.simple_html(self.articles)
+        return Styler.advanced_html(self.articles)
 
     def to_html_to_file(self, path: Path):
         html_result = self.to_html()
@@ -206,18 +207,6 @@ class Client(object):
         if data['status'] != 'ok':
             print(f'Issues retrieving articles about [{kw}] - status: [{data["status"]}]')
         return News(data['articles'][:limit])
-
-
-class HTML(object):
-    """Makes responses into html"""
-
-    @staticmethod
-    def headlines_to_html(headlines: List[Dict]):
-        titles_and_links = {}
-
-        for article in headlines:
-            titles_and_links[article['url']] = f"[{article['author']}] | {article['title']} | {article['description']}"
-        return make_simple_html(titles_and_links)
 
 
 if __name__ == "__main__":
