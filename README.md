@@ -22,6 +22,15 @@ UI
 -- miniature images for articles?
 -- article titles too long (wrap around)
 
+UX (esken)
+- centrer h1 (index en particulier)
+- Panel naivgation (index)
+- jolis boutons/textarea
+
+PACKAGE
+- docker-compose for mounting local key dir
+ 
+
 
 ### Author 
 Eliott Legendre 

@@ -8,7 +8,15 @@ def copy_api_key():
         target = f'/tmp/{p.name}'
         shutil.copy(p, target)
     except FileNotFoundError:
-        raise FileNotFoundError('Api Key secret file not found.')
+        print(f'Not found in [{p}] - Trying another source')
+
+    try:
+        p = Path('/mnt/news_api.secret')
+        target = f'/tmp/{p.name}'
+        shutil.copy(p, target)
+    except FileNotFoundError:
+        print(f'Not found in [{p}] - Trying another source')
+        raise FileNotFoundError(f'Api Key secret file not found in [{p}].')
 
     print(f'Api Key secret file copied to [{target}]')
     return 0

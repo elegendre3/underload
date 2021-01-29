@@ -9,12 +9,16 @@ from helpers import interests
 from news.news_site.api.news_api.key import get_key
 from news.news_site.api.news_api.main import Client
 
+TEMPLATE_FOLDER = os.getenv('TEMPLATE_FOLDER', '../docker/templates')
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=TEMPLATE_FOLDER)
 
 setup(json_enabled=True)
 
 app_logger = logging.getLogger("ravnml")
+
+app_logger.info(f'Template folder is set to [{TEMPLATE_FOLDER}]')
+app_logger.info(f'Current dir [{os.getcwd()}]')
 
 client = Client(get_key())
 
@@ -32,13 +36,13 @@ def hello_world():
 
 @app.route('/headlines', methods=['GET'])
 def headlines():
-    client.get_news().to_html_to_file(Path('templates/headlines_better.html'))
+    client.get_news().to_html_to_file(Path(f'{TEMPLATE_FOLDER}/headlines_better.html'))
     return render_template("headlines_better.html")
 
 
 @app.route('/tailor', methods=['GET'])
 def tailor():
-    client.search_keywords(interests.Science.topics[0]).to_html_to_file(Path('templates/tailor.html'))
+    client.search_keywords(interests.Science.topics[0]).to_html_to_file(Path(f'{TEMPLATE_FOLDER}/tailor.html'))
     return render_template("tailor.html")
 
 
