@@ -4,18 +4,23 @@
 
 
 ### TODO
-- filter search results somehow (on language to start with)
-- figure out what to do with the search (how do you combine multiple topics)
+ENG:
+- Enrich Results class with title, url/link, description, author fields and use it
 
-- make UI prettier
--- css style for headers (color, font)
--- miniature images for articles?
--- article titles too long (wrap around)
+FUNC
+- filter search results somehow (on language to start with)
+
+- figure out what to do with the search (how do you combine multiple topics)
 
 - combine US and FR headlines
 -- page w. 2 columns?
 
--- Add keywords to filter (and chose what source it applies to)
+UI
+- Navigation buttons/tabs in every page + index (miniatures?)
+- make UI prettier
+-- css style for headers (color, font)
+-- miniature images for articles?
+-- article titles too long (wrap around)
 
 
 ### Author 

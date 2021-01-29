@@ -54,9 +54,7 @@ class Styler(object):
         articles_html = ''
         for article in articles:
             agg_title = f"[{article['author']}] | {article['title']}"
-
-            article_html = article_template
-            articles_html += article_html.format(ARTICLE_TITLE=agg_title, ARTICLE_LINK=article['url'], ARTICLE_TEXT=article['description']) + '<br>'
+            articles_html += article_template.format(ARTICLE_TITLE=agg_title, ARTICLE_LINK=article['url'], ARTICLE_TEXT=article['description']) + '<br>'
 
         htmltext = advanced_html_template.format(TITLE=title, ARTICLES=articles_html)
         return htmltext
