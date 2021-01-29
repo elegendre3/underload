@@ -1,10 +1,12 @@
 import json
 from pathlib import Path
+import random
 import requests
 from typing import Dict, List
 
 from news.news_site.api.news_api.key import get_key
 from helpers.html import Styler
+from helpers.interests import Interests
 
 DEV = True
 
@@ -201,13 +203,25 @@ class Client(object):
 
         return News(data['articles'], 'Headlines')
 
-    def search_keywords(self, kw: List[str], limit: int = 20) -> News:
+    def _kw_search(self, kw: List[str],) -> List[Dict]:
         url = self.base_url + self.everything + f'q={"+".join(kw)}' + self.api_key
         resp = requests.get(url)
         data = resp.json()
         if data['status'] != 'ok':
             print(f'Issues retrieving articles about [{kw}] - status: [{data["status"]}]')
-        return News(data['articles'][:limit], f'Topic: [{", ".join(kw)}]')
+        return data['articles']
+
+    def search_keywords(self, kw: List[str], limit: int = 20) -> News:
+        data = self._kw_search(kw)
+        return News(data[:limit], f'Topic: [{", ".join(kw)}]')
+
+    def tailored_news(self, limit: int = 20) -> News:
+        data = []
+        for kw in Interests.get_all():
+            res = self._kw_search(kw)
+            data.extend(res[:5])   # limiting to 5 article per topic
+        random.shuffle(data)
+        return News(data[:limit], 'Tailor')
 
 
 if __name__ == "__main__":

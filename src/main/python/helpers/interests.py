@@ -1,3 +1,21 @@
+import random
+from typing import Dict, List
+
+
+class Interests:
+    @staticmethod
+    def get_all() -> List[List[str]]:
+        all = []
+        for interest in [Culture, Sports, Science]:
+            for person in interest.persons:
+                all.append(person)
+            for topic in interest.topics:
+                all.append(topic)
+
+        # random.shuffle(all)
+        return all
+
+
 # CULTURE
 class Culture:
     persons = [
@@ -31,6 +49,7 @@ class Sports:
 
 # SCIENCE
 class Science:
+    persons = []
     topics = [
         ['natural', 'language', 'processing'],
         ['pytorch'],
@@ -39,3 +58,8 @@ class Science:
         ['transformers'],
         ['huggingface'],
     ]
+
+
+if __name__ == "__main__":
+    kwords = Interests.get_all()
+    print(kwords)

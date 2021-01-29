@@ -24,13 +24,16 @@ UI
 
 UX (esken)
 - centrer h1 (index en particulier)
-- Panel naivgation (index)
+- Panel navigation (index)
 - jolis boutons/textarea
 
 PACKAGE
 - docker-compose for mounting local key dir
  
 
+DEBUG
+- du bruit dans les resultats search (covid, montre connectee xiaomi, ...)
+- mais aussi du tres cool (replicating GPT-2 at home)
 
 ### Author 
 Eliott Legendre 

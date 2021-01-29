@@ -42,7 +42,7 @@ def headlines():
 
 @app.route('/tailor', methods=['GET'])
 def tailor():
-    client.search_keywords(interests.Science.topics[0]).to_html_to_file(Path(f'{TEMPLATE_FOLDER}/tailor.html'))
+    client.tailored_news().to_html_to_file(Path(f'{TEMPLATE_FOLDER}/tailor.html'))
     return render_template("tailor.html")
 
 
