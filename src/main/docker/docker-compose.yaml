@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+  minio:
+    image: underload:1.0.dev0
+    restart: always
+    environment:
+      MYKEY: myval
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    ports:
+      - 5000:5000
+    volumes:
+      - /Users/eliott.legendre/Desktop/test_mount/:/mnt/
+
+
+# docker run -p 5000:5000 -v /Users/eliott.legendre/Desktop/test_mount/:/mnt/ underload:1.0.dev0
