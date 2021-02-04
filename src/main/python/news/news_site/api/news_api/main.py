@@ -159,8 +159,7 @@ class News(object):
         self.title = title
 
     def to_html(self):
-        # return Styler.simple_html(self.articles)
-        return Styler.advanced_html(self.articles, self.title)
+        return Styler.style_html(self.articles, self.title)
 
     def to_html_to_file(self, path: Path):
         html_result = self.to_html()

@@ -6,6 +6,7 @@
 ### TODO
 ENG:
 - Enrich Results class with title, url/link, description, author fields and use it
+- make css work with docker
 
 FUNC
 - filter search results somehow (on language to start with)
@@ -14,6 +15,8 @@ FUNC
 
 - combine US and FR headlines
 -- page w. 2 columns?
+
+- Get source out of title (split('-')?) and replace author?
 
 UI
 - Navigation buttons/tabs in every page + index (miniatures?)
