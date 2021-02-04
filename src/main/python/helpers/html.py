@@ -1,4 +1,22 @@
-from typing import Dict, List
+from typing import Dict, List, Tuple
+
+
+class Icons(object):
+    culture = '<i class="fas fa-seedling" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
+    person = '<i class="fas fa-user" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
+    science = '<i class="fas fa-graduation-cap" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
+    sports = '<i class="fas fa-biking" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
+
+    brain = '<i class="fas fa-graduation-cap" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
+    user_border = '<i class="far fa-user" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
+    address_card = '<i class ="fas fa-address-card" style="font-size:20px;color:#C83E4D;"></i>'
+
+    map = {
+        'culture': culture,
+        'person': person,
+        'science': science,
+        'sports': sports,
+    }
 
 
 class Styler(object):
@@ -63,12 +81,14 @@ class Styler(object):
         return htmltext
 
     @staticmethod
-    def style_html(articles: List[Dict], title: str = "Headlines"):
+    def style_html(articles: List[Tuple[Dict, List[str]]], title: str = "Headlines", tags: List[str] = ()):
+
         article_html = '''<div class="article">
                     <div class="article-content">
                         <h2>{ARTICLE_TITLE}</h2>
                         <h3>{ARTICLE_AUTHOR}</h3>
-                        <a href=https:{ARTICLE_LINK} target='_blank' class="btn-article">See More</a>
+                        <a href={ARTICLE_LINK} target='_blank' class="btn-article">See More</a>
+                        {ICONS}
                     </div>
                 </div>
                 '''
@@ -78,6 +98,7 @@ class Styler(object):
         <meta charset="UTF-8">
         <title>{TITLE}</title>
         <link rel= "stylesheet" type= "text/css" href= "{CSS_SOURCE}">
+        <script src="https://kit.fontawesome.com/88a8ba13d4.js" crossorigin="anonymous"></script>
     </head>
     <body>
         <div class="container">
@@ -91,11 +112,12 @@ class Styler(object):
 '''
 
         articles_html = ''
-        for article in articles:
+        for article, tags in articles:
             articles_html += article_html.format(
                 ARTICLE_TITLE=article['title'],
                 ARTICLE_AUTHOR=article['author'],
                 ARTICLE_LINK=article['url'],
+                ICONS='\n'.join([Icons.map[tag] for tag in tags])
             )
 
         htmltext = base_html.format(

@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import random
 import requests
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 from news.news_site.api.news_api.key import get_key
 from helpers.html import Styler
@@ -152,14 +152,28 @@ dummy_data = {'status': 'ok', 'totalResults': 38, 'articles': [
              'content': 'Here are the most important news, trends and analysis that investors need to start their trading day:\r\n1. Dow set to drop on tech weakness, a day after strength in the sector\r\nTraders on the floor of… [+5042 chars]'}]}
 
 
+class NewsItem(object):
+    """Class holding a news item (~article)"""
+
+    def __init__(self, article: Dict, tags: List[str] = ()):
+        self.article = article
+        self.tags = tags
+
+
 class News(object):
     """Class holding a news search result"""
-    def __init__(self, articles: List[Dict], title: str = 'Headlines'):
-        self.articles = articles
+    def __init__(self, news: List[NewsItem], title: str = 'Headlines'):
+        self.news = news
         self.title = title
 
+    def _articles(self) -> List[Dict]:
+        return [x.article for x in self.news]
+
+    def _articles_and_tags(self) -> List[Tuple[Dict, List[str]]]:
+        return [(x.article, x.tags) for x in self.news]
+
     def to_html(self):
-        return Styler.style_html(self.articles, self.title)
+        return Styler.style_html(self._articles_and_tags(), self.title)
 
     def to_html_to_file(self, path: Path):
         html_result = self.to_html()
@@ -168,7 +182,7 @@ class News(object):
             f.write(html_result)
 
     def to_json(self):
-        return json.dumps(self.articles, indent=4)
+        return json.dumps(self._articles(), indent=4)
 
 
 class Client(object):
@@ -200,7 +214,7 @@ class Client(object):
         else:
             data = self._get_headlines(country[1])
 
-        return News(data['articles'], 'Headlines')
+        return News([NewsItem(x) for x in data['articles']], 'Headlines')
 
     def _kw_search(self, kw: List[str],) -> List[Dict]:
         url = self.base_url + self.everything + f'q={"+".join(kw)}' + self.api_key
@@ -212,13 +226,13 @@ class Client(object):
 
     def search_keywords(self, kw: List[str], limit: int = 20) -> News:
         data = self._kw_search(kw)
-        return News(data[:limit], f'Topic: [{", ".join(kw)}]')
+        return News([NewsItem(x) for x in data[:limit]], f'Topic: [{", ".join(kw)}]')
 
     def tailored_news(self, limit: int = 20) -> News:
         data = []
-        for kw in Interests.get_all():
+        for kw, t in Interests.get_all():
             res = self._kw_search(kw)
-            data.extend(res[:5])   # limiting to 5 article per topic
+            data.extend([NewsItem(x, t) for x in res[:5]])   # limiting to 5 article per topic
         random.shuffle(data)
         return News(data[:limit], 'Tailor')
 

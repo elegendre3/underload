@@ -5,7 +5,6 @@ from pathlib import Path
 from flask import Flask, render_template
 
 from logging_conf import setup
-from helpers import interests
 from news.news_site.api.news_api.key import get_key
 from news.news_site.api.news_api.main import Client
 
