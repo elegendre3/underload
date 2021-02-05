@@ -2,6 +2,7 @@ from typing import Dict, List, Tuple
 
 
 class Icons(object):
+    # INTERESTS
     culture = '<i class="fas fa-seedling" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
     person = '<i class="fas fa-user" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
     science = '<i class="fas fa-graduation-cap" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
@@ -11,11 +12,24 @@ class Icons(object):
     user_border = '<i class="far fa-user" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
     address_card = '<i class ="fas fa-address-card" style="font-size:20px;color:#C83E4D;"></i>'
 
+    # LOCATION
+    globe = '<i class="fas fa-globe-americas" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
+    local = '<i class="fas fa-location-arrow" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
+
+    usd = '<i class="fas fa-dollar-sign" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
+    eur = '<i class ="fas fa-euro-sign" style="color:#C83E4D;;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
+
+    us_flag = '<i class="fas fa-flag-usa" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
+    republican = '<i class="fas fa-republican" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
+    democrat = '<i class="fas fa-democrat" style="color:#C83E4D;text-shadow:0.6px 0.6px 0.6px #000000;"></i>'
+
     map = {
         'culture': culture,
         'person': person,
         'science': science,
         'sports': sports,
+        'local': local,
+        'global': globe
     }
 
 

@@ -13,8 +13,7 @@ ENG:
 FUNC
 - filter search results somehow (on language to start with)
 
-- combine US and FR headlines
--- page w. 2 columns? or just icons!
+- UK News?
 
 - Get source out of title (split('-')?) and replace author?
  

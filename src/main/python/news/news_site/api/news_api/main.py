@@ -194,27 +194,30 @@ class Client(object):
         self.headlines = '/top-headlines?'
         self.everything = '/everything?'
 
-    def _get_headlines(self, country_code: str):
+    def _get_headlines(self, country_code: str) -> List[Dict]:
         url = self.base_url + self.headlines + f'country={country_code}' + self.api_key
         resp = requests.get(str(url))
         data = resp.json()
         if data['status'] != 'ok':
             print(f'Issues retrieving headlines from [{country_code}] - status: [{data["status"]}]')
-        return data
+        return data['articles']
 
     def get_news(self) -> News:
         """Does not accept country code, nor combines them"""
+        news = []
 
-        country = ['fr', 'us']
+        country_codes = {'fr': ['local'], 'us': ['global']}
 
         # Get news headlines
-        # PREVENTS CALLING THE API WHEN DEVELOPING
-        if DEV:
-            data = dummy_data
-        else:
-            data = self._get_headlines(country[1])
+        for c_code, tags in country_codes.items():
+            if DEV:   # PREVENTS CALLING THE API WHEN DEVELOPING
+                data = dummy_data['articles']
+            else:
+                data = self._get_headlines(c_code)
 
-        return News([NewsItem(x) for x in data['articles']], 'Headlines')
+            news.extend([NewsItem(x, tags) for x in data])
+            random.shuffle(news)
+        return News(news, 'Headlines')
 
     def _kw_search(self, kw: List[str],) -> List[Dict]:
         url = self.base_url + self.everything + f'q={"+".join(kw)}' + self.api_key
@@ -229,12 +232,15 @@ class Client(object):
         return News([NewsItem(x) for x in data[:limit]], f'Topic: [{", ".join(kw)}]')
 
     def tailored_news(self, limit: int = 20) -> News:
-        data = []
+        news = []
         for kw, t in Interests.get_all():
-            res = self._kw_search(kw)
-            data.extend([NewsItem(x, t) for x in res[:5]])   # limiting to 5 article per topic
-        random.shuffle(data)
-        return News(data[:limit], 'Tailor')
+            if DEV:   # PREVENTS CALLING THE API WHEN DEVELOPING
+                data = dummy_data['articles']
+            else:
+                data = self._kw_search(kw)
+            news.extend([NewsItem(x, t) for x in data[:5]])   # limiting to 5 article per topic
+        random.shuffle(news)
+        return News(news[:limit], 'Tailor')
 
 
 if __name__ == "__main__":
