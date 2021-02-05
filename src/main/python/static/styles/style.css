@@ -1,6 +1,6 @@
 h1 {
     border: 3px #eee solid;
-    color: #C83E4D;
+    color: #DB7F8E;
     font-size: 50px;
     text-align: center;
     padding: 10px;
@@ -20,6 +20,11 @@ h3 {
     margin: 50px;
     font-family: "palatino";
 }
+
+
+
+
+
 
 .all-articles {
     display: flex;
@@ -49,10 +54,77 @@ h3 {
     padding: 8px 24px;
     border-radius: 50px;
     text-decoration: none;
-    transition: colors 0.5s ease, background-color 0.5s ease;
+    transition: color 0.5s ease, background-color 0.5s ease;
 }
 
 .btn-article:hover {
     background-color: #5E7282;
     color: white;
+}
+
+
+
+
+
+
+
+.panels {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 70px;
+}
+
+.panel-left {
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    height: 30%;
+    width: 30%;
+    margin: 20px;
+    padding: 0 0 25px 0;
+    text-align: center;
+    font-size: 25px;
+    color: #42658A;
+    text-decoration: none;
+    transition: color 0.1s ease, height 0.1s ease, width 0.1s ease, margin 0.1s ease;
+}
+
+.panel-image {
+    height: 100%;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.panel-left:hover {
+    height: 34%;
+    width: 34%;
+    margin: 24px;
+    color: #DB7F8E;
+}
+
+div.hiddden-text {
+    color: green;
+    text-align: center;
+    padding: 10px 20px;
+}
+
+.panel-right {
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    height: 29.3%;
+    width: 29.3%;
+    margin: 20px;
+    padding: 0 0 25px 0;
+    text-align: center;
+    font-size: 26px;
+    color: #42658A;
+    text-decoration: none;
+    transition: color 0.1s ease, height 0.1s ease, width 0.1s ease, margin 0.1s ease;
+}
+
+.panel-right:hover {
+    height: 33%;
+    width: 33%;
+    margin: 24px;
+    color: #DB7F8E;
 }

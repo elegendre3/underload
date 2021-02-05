@@ -9,7 +9,6 @@ from news.news_site.api.news_api.key import get_key
 from news.news_site.api.news_api.main import Client
 
 TEMPLATE_FOLDER = os.getenv('TEMPLATE_FOLDER', '../docker/templates')
-# TEMPLATE_FOLDER = os.getenv('TEMPLATE_FOLDER', 'templates')
 STATIC_FOLDER = os.getenv('STATIC_FOLDER', '/static')
 
 app = Flask(__name__, template_folder=TEMPLATE_FOLDER, static_url_path=STATIC_FOLDER)
