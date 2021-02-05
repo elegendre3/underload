@@ -100,7 +100,7 @@ class Styler(object):
         article_html = '''<div class="article">
                     <div class="article-content">
                         <h2>{ARTICLE_TITLE}</h2>
-                        <h3>{ARTICLE_AUTHOR}</h3>
+                        <h3>{ARTICLE_SOURCE}</h3>
                         <a href={ARTICLE_LINK} target='_blank' class="btn-article">See More</a>
                         {ICONS}
                     </div>
@@ -128,8 +128,8 @@ class Styler(object):
         articles_html = ''
         for article, tags in articles:
             articles_html += article_html.format(
-                ARTICLE_TITLE=article['title'],
-                ARTICLE_AUTHOR=article['author'],
+                ARTICLE_TITLE=article['title'].split(f" - {article['source']['name']}")[0],
+                ARTICLE_SOURCE=article['source']['name'],
                 ARTICLE_LINK=article['url'],
                 ICONS='\n'.join([Icons.map[tag] for tag in tags])
             )

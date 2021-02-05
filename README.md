@@ -6,16 +6,14 @@
 ### TODO
 ENG:
 - try to fix the hacky build. Maybe build.sh for now (CP static dir)
-- make gunicorn workw ith static files (img and css)
+- make gunicorn work with static files (img and css)
 
 - speeding up tailor search and-or cache
 
 FUNC
-- filter search results somehow (on language to start with)
-
 - UK News?
 
-- Get source out of title (split('-')?) and replace author?
+- tailor: Allow searching results in French
  
 
 DEBUG
