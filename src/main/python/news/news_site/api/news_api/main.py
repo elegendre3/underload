@@ -1,8 +1,11 @@
+import datetime
 import json
 from pathlib import Path
 import random
 import requests
 from typing import Dict, List, Tuple
+
+from newsapi import NewsApiClient
 
 from news.news_site.api.news_api.key import get_key
 from helpers.html import Styler
@@ -189,15 +192,10 @@ class Client(object):
     """Talks to the API"""
 
     def __init__(self, api_key: str):
-        self.api_key = f'&apiKey={api_key.strip()}'
-        self.base_url = 'http://newsapi.org/v2'
-        self.headlines = '/top-headlines?'
-        self.everything = '/everything?'
+        self.client = NewsApiClient(api_key.strip())
 
     def _get_headlines(self, country_code: str) -> List[Dict]:
-        url = self.base_url + self.headlines + f'country={country_code}' + self.api_key
-        resp = requests.get(str(url))
-        data = resp.json()
+        data = self.client.get_top_headlines(country=country_code)
         if data['status'] != 'ok':
             print(f'Issues retrieving headlines from [{country_code}] - status: [{data["status"]}]')
         return data['articles']
@@ -220,9 +218,15 @@ class Client(object):
         return News(news, 'Headlines')
 
     def _kw_search(self, kw: List[str],) -> List[Dict]:
-        url = self.base_url + self.everything + f'q={"+".join(kw)}' + self.api_key
-        resp = requests.get(url)
-        data = resp.json()
+        now = datetime.datetime.now()
+        data = self.client.get_everything(
+            q="+".join(kw),
+            from_param=(now - datetime.timedelta(days=2)).date().isoformat(),
+            to=now.date().isoformat(),
+            language='en',
+            sort_by='relevancy',
+        )
+
         if data['status'] != 'ok':
             print(f'Issues retrieving articles about [{kw}] - status: [{data["status"]}]')
         return data['articles']
