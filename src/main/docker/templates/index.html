@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>WelcomeToUnderload</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-</head>
-<body>
-   <h1>- Welcome to UnderLoad -</h1>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Headlines</title>
+        <link rel= "stylesheet" type= "text/css" href= " {{url_for('static',filename='styles/style.css')}} ">
+    </head>
+    <body>
+        <div class="container">
+            <h1>- Welcome To Underload -</h1>
+            <div class="panels">
+                <a href="/tailor" class="panel-left">
+                    <img class="panel-image" src="static/images/red_pill.jpg"/>
+                    <div class="hidden-text">
+                        Tailored News
+                    </div>
+                </a>
+                <a href="/headlines" class="panel-right">
+                    <img class="panel-image" src="static/images/blue_pill.jpg"/>
+                    <div class="hidden-text">
+                        Headlines
+                    </div>
+                </a>
+            </div>
+        </div>
+    </body>s
 </html>

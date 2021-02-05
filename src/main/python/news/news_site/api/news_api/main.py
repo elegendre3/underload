@@ -1,8 +1,11 @@
+import datetime
 import json
 from pathlib import Path
 import random
 import requests
-from typing import Dict, List
+from typing import Dict, List, Tuple
+
+from newsapi import NewsApiClient
 
 from news.news_site.api.news_api.key import get_key
 from helpers.html import Styler
@@ -152,15 +155,28 @@ dummy_data = {'status': 'ok', 'totalResults': 38, 'articles': [
              'content': 'Here are the most important news, trends and analysis that investors need to start their trading day:\r\n1. Dow set to drop on tech weakness, a day after strength in the sector\r\nTraders on the floor of… [+5042 chars]'}]}
 
 
+class NewsItem(object):
+    """Class holding a news item (~article)"""
+
+    def __init__(self, article: Dict, tags: List[str] = ()):
+        self.article = article
+        self.tags = tags
+
+
 class News(object):
     """Class holding a news search result"""
-    def __init__(self, articles: List[Dict], title: str = 'Headlines'):
-        self.articles = articles
+    def __init__(self, news: List[NewsItem], title: str = 'Headlines'):
+        self.news = news
         self.title = title
 
+    def _articles(self) -> List[Dict]:
+        return [x.article for x in self.news]
+
+    def _articles_and_tags(self) -> List[Tuple[Dict, List[str]]]:
+        return [(x.article, x.tags) for x in self.news]
+
     def to_html(self):
-        # return Styler.simple_html(self.articles)
-        return Styler.advanced_html(self.articles, self.title)
+        return Styler.style_html(self._articles_and_tags(), self.title)
 
     def to_html_to_file(self, path: Path):
         html_result = self.to_html()
@@ -169,59 +185,66 @@ class News(object):
             f.write(html_result)
 
     def to_json(self):
-        return json.dumps(self.articles, indent=4)
+        return json.dumps(self._articles(), indent=4)
 
 
 class Client(object):
     """Talks to the API"""
 
     def __init__(self, api_key: str):
-        self.api_key = f'&apiKey={api_key.strip()}'
-        self.base_url = 'http://newsapi.org/v2'
-        self.headlines = '/top-headlines?'
-        self.everything = '/everything?'
+        self.client = NewsApiClient(api_key.strip())
 
-    def _get_headlines(self, country_code: str):
-        url = self.base_url + self.headlines + f'country={country_code}' + self.api_key
-        resp = requests.get(str(url))
-        data = resp.json()
+    def _get_headlines(self, country_code: str) -> List[Dict]:
+        data = self.client.get_top_headlines(country=country_code)
         if data['status'] != 'ok':
             print(f'Issues retrieving headlines from [{country_code}] - status: [{data["status"]}]')
-        return data
+        return data['articles']
 
     def get_news(self) -> News:
         """Does not accept country code, nor combines them"""
+        news = []
 
-        country = ['fr', 'us']
+        country_codes = {'fr': ['local'], 'us': ['global']}
 
         # Get news headlines
-        # PREVENTS CALLING THE API WHEN DEVELOPING
-        if DEV:
-            data = dummy_data
-        else:
-            data = self._get_headlines(country[1])
+        for c_code, tags in country_codes.items():
+            if DEV:   # PREVENTS CALLING THE API WHEN DEVELOPING
+                data = dummy_data['articles']
+            else:
+                data = self._get_headlines(c_code)
 
-        return News(data['articles'], 'Headlines')
+            news.extend([NewsItem(x, tags) for x in data])
+            random.shuffle(news)
+        return News(news, 'Headlines')
 
     def _kw_search(self, kw: List[str],) -> List[Dict]:
-        url = self.base_url + self.everything + f'q={"+".join(kw)}' + self.api_key
-        resp = requests.get(url)
-        data = resp.json()
+        now = datetime.datetime.now()
+        data = self.client.get_everything(
+            q="+".join(kw),
+            from_param=(now - datetime.timedelta(days=2)).date().isoformat(),
+            to=now.date().isoformat(),
+            language='en',
+            sort_by='relevancy',
+        )
+
         if data['status'] != 'ok':
             print(f'Issues retrieving articles about [{kw}] - status: [{data["status"]}]')
         return data['articles']
 
     def search_keywords(self, kw: List[str], limit: int = 20) -> News:
         data = self._kw_search(kw)
-        return News(data[:limit], f'Topic: [{", ".join(kw)}]')
+        return News([NewsItem(x) for x in data[:limit]], f'Topic: [{", ".join(kw)}]')
 
     def tailored_news(self, limit: int = 20) -> News:
-        data = []
-        for kw in Interests.get_all():
-            res = self._kw_search(kw)
-            data.extend(res[:5])   # limiting to 5 article per topic
-        random.shuffle(data)
-        return News(data[:limit], 'Tailor')
+        news = []
+        for kw, t in Interests.get_all():
+            if DEV:   # PREVENTS CALLING THE API WHEN DEVELOPING
+                data = dummy_data['articles']
+            else:
+                data = self._kw_search(kw)
+            news.extend([NewsItem(x, t) for x in data[:5]])   # limiting to 5 article per topic
+        random.shuffle(news)
+        return News(news[:limit], 'Tailor')
 
 
 if __name__ == "__main__":

@@ -5,13 +5,13 @@ from pathlib import Path
 from flask import Flask, render_template
 
 from logging_conf import setup
-from helpers import interests
 from news.news_site.api.news_api.key import get_key
 from news.news_site.api.news_api.main import Client
 
 TEMPLATE_FOLDER = os.getenv('TEMPLATE_FOLDER', '../docker/templates')
+STATIC_FOLDER = os.getenv('STATIC_FOLDER', '/static')
 
-app = Flask(__name__, template_folder=TEMPLATE_FOLDER)
+app = Flask(__name__, template_folder=TEMPLATE_FOLDER, static_url_path=STATIC_FOLDER)
 
 setup(json_enabled=True)
 
@@ -36,8 +36,8 @@ def hello_world():
 
 @app.route('/headlines', methods=['GET'])
 def headlines():
-    client.get_news().to_html_to_file(Path(f'{TEMPLATE_FOLDER}/headlines_better.html'))
-    return render_template("headlines_better.html")
+    client.get_news().to_html_to_file(Path(f'{TEMPLATE_FOLDER}/headlines.html'))
+    return render_template("headlines.html")
 
 
 @app.route('/tailor', methods=['GET'])

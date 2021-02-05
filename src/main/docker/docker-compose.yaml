@@ -7,7 +7,7 @@ services:
     environment:
       MYKEY: myval
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
       interval: 30s
       timeout: 20s
       retries: 3
@@ -18,3 +18,4 @@ services:
 
 
 # docker run -p 5000:5000 -v /Users/eliott.legendre/Desktop/test_mount/:/mnt/ underload:1.0.dev0
+# docker run -p 8080:8080 --rm -v /Users/eliott.legendre/Desktop/test_mount/:/mnt/ underload:1.0.dev0
