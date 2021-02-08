@@ -21,6 +21,8 @@ class Persons:
         ['dan', 'brown'],
         ['tim', 'ferris'],
         ['lex', 'fridman'],
+        ['thomas', 'piketty'],
+
     ]
 
 
@@ -38,8 +40,7 @@ class Culture:
 class Sports:
     topics = [
         ['formula', 'one'],
-        ['cycling'],
-        ['cyclisme'],
+        ['cycling', 'cyclisme'],
         ['triathlon'],
         ['running'],
         ['bouldering'],
