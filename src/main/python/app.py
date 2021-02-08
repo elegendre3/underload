@@ -28,12 +28,6 @@ def index():
     return render_template("index.html")
 
 
-@app.route('/hello-world', methods=['GET', 'POST'])
-def hello_world():
-    greeting_target = os.environ.get('GREETING_TARGET', 'World')
-    return 'Hello {}!\n'.format(greeting_target)
-
-
 @app.route('/headlines', methods=['GET'])
 def headlines():
     client.get_news().to_html_to_file(Path(f'{TEMPLATE_FOLDER}/headlines.html'))
@@ -44,6 +38,13 @@ def headlines():
 def tailor():
     client.tailored_news().to_html_to_file(Path(f'{TEMPLATE_FOLDER}/tailor.html'))
     return render_template("tailor.html")
+
+
+# USED FOR TESTING
+@app.route('/test', methods=['GET'])
+def test():
+    client.testing().to_html_to_file(Path(f'{TEMPLATE_FOLDER}/test.html'))
+    return render_template("test.html")
 
 
 if __name__ == "__main__":

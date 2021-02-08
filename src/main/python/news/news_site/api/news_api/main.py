@@ -236,6 +236,7 @@ class Client(object):
         return News([NewsItem(x) for x in data[:limit]], f'Topic: [{", ".join(kw)}]')
 
     def tailored_news(self, limit: int = 20) -> News:
+        """Major issue with this is the number of calls made (slow and > limit)"""
         news = []
         for kw, t in Interests.get_all():
             if DEV:   # PREVENTS CALLING THE API WHEN DEVELOPING
@@ -245,6 +246,46 @@ class Client(object):
             news.extend([NewsItem(x, t) for x in data[:5]])   # limiting to 5 article per topic
         random.shuffle(news)
         return News(news[:limit], 'Tailor')
+
+    def testing(self) -> News:
+        """Used for testing the API"""
+        news = []
+        kwandt = Interests.get_all()
+        kwandt.append((['buccaneers'], ['sports']))
+        idx = 0
+
+        data = self._get_headlines('us')
+
+        for art in data:
+            art_txt = art['title'] + art['description'] + art['content']
+            unique_words = [x.lower() for x in set(art_txt.split(' '))]  # dirty "split" tokenizer
+            print(unique_words)
+            # todo could fit tokenizer with interest kwords, and transform concatenated article text (easier matmul)
+            relevant = False
+            t = None
+            while (not relevant) and (idx < len(kwandt)):
+                kw, t = kwandt[idx]
+                print(kw)
+                if kw[0] in unique_words:
+                    print(unique_words)
+                    relevant = True
+                else:
+                    # relevant = True
+                    idx+=1
+            if relevant:
+                news.append(NewsItem(art, t))
+        return News(news, 'Test')
+
+    def testing_kw(self) -> News:
+        """Used for testing the API"""
+        news = []
+        kw = ["cycling", "bouldering"]
+        kw = ["bouldering"]
+        # kw = ["formula", "one"]
+
+        data = self._kw_search(kw)
+        news.extend([NewsItem(x) for x in data])
+        return News(news, 'Test')
 
 
 if __name__ == "__main__":
