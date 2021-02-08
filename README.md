@@ -13,7 +13,9 @@ ENG:
 -- need to do smthg.. more interests will mean more searches, not viable
 
 
-- Persistence of interests in Mongo DB
+- Persistence of interests in Mongo DB .. and articles..?
+-> Track age and articles, and requests/day?
+
 - Quick user auth
 - -> Interests page render?
 
@@ -22,7 +24,8 @@ FUNC
 - UK News?
 
 - tailor: Allow searching results in French
- 
+
+- Filtering headlines? Replacing tailor..? 
 
 DEBUG
 - du bruit dans les resultats search (covid, montre connectee xiaomi, ...)

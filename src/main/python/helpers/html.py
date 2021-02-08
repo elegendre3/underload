@@ -36,6 +36,11 @@ class Icons(object):
 class Styler(object):
 
     @staticmethod
+    def _format_datetime(datetime_as_Str: str) -> str:
+        y, m, d = datetime_as_Str.split('T')[0].split('-')
+        return f'{d}/{m}/{y}'
+
+    @staticmethod
     def simple_html(articles: List[Dict]):
         simple_html_template = '''
         <html>
@@ -129,7 +134,7 @@ class Styler(object):
         for article, tags in articles:
             articles_html += article_html.format(
                 ARTICLE_TITLE=article['title'].split(f" - {article['source']['name']}")[0],
-                ARTICLE_SOURCE=article['source']['name'],
+                ARTICLE_SOURCE=f"{article['source']['name']} - {Styler._format_datetime(article['publishedAt'])}",
                 ARTICLE_LINK=article['url'],
                 ICONS='\n'.join([Icons.map[tag] for tag in tags])
             )
