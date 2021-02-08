@@ -8,7 +8,15 @@ ENG:
 - try to fix the hacky build. Maybe build.sh for now (CP static dir)
 - make gunicorn work with static files (img and css)
 
-- speeding up tailor search and-or cache
+- SPEED
+-- speeding up tailor search and-or cache
+-- need to do smthg.. more interests will mean more searches, not viable
+
+
+- Persistence of interests in Mongo DB
+- Quick user auth
+- -> Interests page render?
+
 
 FUNC
 - UK News?
