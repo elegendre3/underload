@@ -22,7 +22,7 @@ class Persons:
         ['tim', 'ferris'],
         ['lex', 'fridman'],
         ['thomas', 'piketty'],
-
+        ['sylvain', 'tesson'],
     ]
 
 
@@ -32,7 +32,11 @@ class Culture:
         ['sleep'],
         ['meditation'],
         ['yoga'],
-        ['latest', 'movies']
+        ['latest', 'movies'],
+        ['nutrition'],
+        ['life', 'balance'],
+        ['reading'],
+        ['cooking'],
     ]
 
 
@@ -43,7 +47,8 @@ class Sports:
         ['cycling', 'cyclisme'],
         ['triathlon'],
         ['running'],
-        ['bouldering'],
+        ['rock', 'climbing'],
+        ['motorsport']
     ]
 
 
@@ -51,8 +56,8 @@ class Sports:
 class Science:
     topics = [
         ['natural', 'language', 'processing'],
-        ['pytorch'],
-        ['tensorflow'],
+        ['neural', 'networks'],
+        ['pytorch', 'tensorflow'],
         ['papers', 'with', 'code'],
         ['transformers'],
         ['huggingface'],

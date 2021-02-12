@@ -11,7 +11,7 @@ from news.news_site.api.news_api.key import get_key
 from helpers.html import Styler
 from helpers.interests import Interests
 
-DEV = True
+DEV = False
 
 dummy_data = {'status': 'ok', 'totalResults': 38, 'articles': [
             {'source': {'id': None, 'name': 'WSB Atlanta'}, 'author': 'WSBTV.com News Staff',

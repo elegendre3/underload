@@ -1,9 +1,17 @@
-# UnderLoad
+# UnderLoad -- News app fpr when your overloaded
 
-## News app to filter based on your criteria
+## - Headlines - 
+### Gives you regular unfiltered News Headlines
 
 
-### TODO
+
+## - Tailor - 
+### Gives you hand-picked News Items based on your inputed interests
+
+
+
+
+## TODO
 ENG:
 - try to fix the hacky build. Maybe build.sh for now (CP static dir)
 - make gunicorn work with static files (img and css)
@@ -11,25 +19,21 @@ ENG:
 - SPEED
 -- speeding up tailor search and-or cache
 -- need to do smthg.. more interests will mean more searches, not viable
-
+-- Filtering headlines? Replacing tailor..? ...
 
 - Persistence of interests in Mongo DB .. and articles..?
 -> Track age and articles, and requests/day?
 
-- Quick user auth
+
+- Quick user auth  (how do you deal with the API key..? Make them sign up?)
 - -> Interests page render?
 
 
 FUNC
 - UK News?
-
 - tailor: Allow searching results in French
 
-- Filtering headlines? Replacing tailor..? 
 
-DEBUG
-- du bruit dans les resultats search (covid, montre connectee xiaomi, ...)
-- mais aussi du tres cool ("replicating GPT-2 at home")
 
 ### Author 
 Eliott Legendre 
