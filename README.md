@@ -1,39 +1,43 @@
-# UnderLoad -- News app fpr when your overloaded
+# < UnderLoad -- a News app that will not overload you with irrelevant information >
 
 ## - Headlines - 
-### Gives you regular unfiltered News Headlines
-
+### Gives you regular unfiltered News Headlines (BlUE)
 
 
 ## - Tailor - 
-### Gives you hand-picked News Items based on your inputed interests
-
+### Gives you hand-picked News Items based on your inputed interests (RED)
 
 
 
 ## TODO
 ENG:
-- try to fix the hacky build. Maybe build.sh for now (CP static dir)
 - make gunicorn work with static files (img and css)
 
-- SPEED
--- speeding up tailor search and-or cache
--- need to do smthg.. more interests will mean more searches, not viable
--- Filtering headlines? Replacing tailor..? ...
 
+SPEED
+-- speeding up tailor even more, test scaling capacity with growing interests
+-- or Filtering headlines?
+
+
+PRODUCT
+- Home Button
+  
 - Persistence of interests in Mongo DB .. and articles..?
 -> Track age and articles, and requests/day?
-
-
+  
 - Quick user auth  (how do you deal with the API key..? Make them sign up?)
 - -> Interests page render?
 
 
-FUNC
+FUNCTIONAL
 - UK News?
 - tailor: Allow searching results in French
 
 
+## User Guide
+```pyb publish```
+
+```docker run -v /Users/eliott.legendre/Desktop/test_mount/news_api.secret:/mnt/news_api.secret -p 0.0.0.0:8080:8080 underload:0.0.1 ```
 
 ### Author 
 Eliott Legendre 

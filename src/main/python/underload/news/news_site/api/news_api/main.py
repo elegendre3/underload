@@ -8,8 +8,8 @@ from typing import Dict, List, Tuple
 from newsapi import NewsApiClient
 
 from underload.news.news_site.api.news_api.key import get_key
-from underload.helpers import Styler
-from underload.helpers import Interests
+from underload.helpers.html import Styler
+from underload.helpers.interests import Interests
 
 DEV = False
 

@@ -11,7 +11,7 @@ use_plugin('pypi:pybuilder_docker', version='0.1.12')
 
 
 name = "underload"
-verion = '0.0.1'
+version = '0.0.1'
 default_task = "publish"
 author = 'Eliott Legendre'
 
@@ -23,15 +23,21 @@ def set_properties(project):
     project.depends_on('html5lib')
     project.depends_on('json-logging')
     project.depends_on('pyyaml')
-
+    project.depends_on("flask==1.1.1")
     project.depends_on('newsapi-python')
 
-    project.build_depends_on("flask==1.1.1")
     project.build_depends_on("gunicorn==20.0.4")
     project.build_depends_on("bump2version")
 
     project.set_property('coverage_break_build', False)
 
+    project.include_file("underload.templates", "index.html")
+    project.include_file("underload.templates", "headlines.html")
+    project.include_file("underload.templates", "tailor.html")
+    # project.include_file("underload.templates", "test.html")
+    project.include_file("underload.static.styles", "style.css")
+    project.include_file("underload.static.images", "blue_pill.jpg")
+    project.include_file("underload.static.images", "red_pill.jpg")
 
 
 @task
