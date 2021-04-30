@@ -11,7 +11,8 @@
 
 ## TODO
 ENG:
-- make gunicorn work with static files (img and css)
+- make gunicorn work with static files (img and css) (and secret!)
+- refactor the messy lib
 
 
 SPEED
@@ -21,7 +22,7 @@ SPEED
 
 PRODUCT
 - Home Button
-  
+
 - Persistence of interests in Mongo DB .. and articles..?
 -> Track age and articles, and requests/day?
   
@@ -35,6 +36,11 @@ FUNCTIONAL
 
 
 ## User Guide
+Using:
+- NewsAPI
+- Flask
+- PyBuilder & PyBuilderDocker
+
 ```pyb publish```
 
 ```docker run -v /Users/eliott.legendre/Desktop/test_mount/news_api.secret:/mnt/news_api.secret -p 0.0.0.0:8080:8080 underload:0.0.1 ```
