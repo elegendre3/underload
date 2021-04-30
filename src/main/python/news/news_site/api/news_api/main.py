@@ -1,17 +1,26 @@
 import datetime
 import json
+from multiprocessing import (Manager, Pool)
+import os
 from pathlib import Path
 import random
 import requests
 from typing import Dict, List, Tuple
 
 from newsapi import NewsApiClient
+from newsapi.newsapi_exception import NewsAPIException
 
 from news.news_site.api.news_api.key import get_key
 from helpers.html import Styler
 from helpers.interests import Interests
 
-DEV = False
+
+class ExhaustedDailyQuotaException(Exception):
+    pass
+
+
+DEV = os.getenv("DEV", False)  # todo check dc env val passed as bool, not str
+MULTIPROC = os.getenv("MULTIPROC", True)
 
 dummy_data = {'status': 'ok', 'totalResults': 38, 'articles': [
             {'source': {'id': None, 'name': 'WSB Atlanta'}, 'author': 'WSBTV.com News Staff',
@@ -188,11 +197,36 @@ class News(object):
         return json.dumps(self._articles(), indent=4)
 
 
+# def get_tailored_news_dummy(kw_t_tuple):
+#     # mock actually calling the API
+#     return [NewsItem(dummy_data['articles'][0], kw_t_tuple[1]), NewsItem(dummy_data['articles'][1], kw_t_tuple[1])]
+
+
+def get_tailored_news_multiproc(client_kw_t_tuple):
+    """Need to recreate a client to avoid "cant pickle module" errors from multiprocessing"""
+    client = NewsApiClient(client_kw_t_tuple[0])
+    kw = client_kw_t_tuple[1]
+    t = client_kw_t_tuple[2]
+    now = datetime.datetime.now()
+    data = client.get_everything(
+        q="+".join(kw),
+        from_param=(now - datetime.timedelta(days=2)).date().isoformat(),
+        to=now.date().isoformat(),
+        language='en',
+        sort_by='relevancy',
+    )
+
+    if data['status'] != 'ok':
+        print(f'Issues retrieving articles about [{kw}] - status: [{data["status"]}]')
+    return [NewsItem(x, t) for x in data['articles'][:5]]
+
+
 class Client(object):
     """Talks to the API"""
 
     def __init__(self, api_key: str):
-        self.client = NewsApiClient(api_key.strip())
+        self.api_key = api_key.strip()
+        self.client = NewsApiClient(self.api_key)
 
     def _get_headlines(self, country_code: str) -> List[Dict]:
         data = self.client.get_top_headlines(country=country_code)
@@ -203,19 +237,21 @@ class Client(object):
     def get_news(self) -> News:
         """Does not accept country code, nor combines them"""
         news = []
-
         country_codes = {'fr': ['local'], 'us': ['global']}
 
-        # Get news headlines
-        for c_code, tags in country_codes.items():
-            if DEV:   # PREVENTS CALLING THE API WHEN DEVELOPING
-                data = dummy_data['articles']
-            else:
-                data = self._get_headlines(c_code)
+        try:
+            # Get news headlines
+            for c_code, tags in country_codes.items():
+                if DEV:   # PREVENTS CALLING THE API WHEN DEVELOPING
+                    data = dummy_data['articles']
+                else:
+                    data = self._get_headlines(c_code)
 
-            news.extend([NewsItem(x, tags) for x in data])
-            random.shuffle(news)
-        return News(news, 'Headlines')
+                news.extend([NewsItem(x, tags) for x in data])
+                random.shuffle(news)
+            return News(news, 'Headlines')
+        except NewsAPIException:
+            raise ExhaustedDailyQuotaException('Too many Requests were made today, reached daily limit of 50.')
 
     def _kw_search(self, kw: List[str],) -> List[Dict]:
         now = datetime.datetime.now()
@@ -236,16 +272,32 @@ class Client(object):
         return News([NewsItem(x) for x in data[:limit]], f'Topic: [{", ".join(kw)}]')
 
     def tailored_news(self, limit: int = 20) -> News:
-        """Major issue with this is the number of calls made (slow and > limit)"""
-        news = []
-        for kw, t in Interests.get_all():
-            if DEV:   # PREVENTS CALLING THE API WHEN DEVELOPING
-                data = dummy_data['articles']
+        """Main issue with this is the number of calls made (slow and > limit)"""
+        try:
+            news = []
+            all_interests = Interests.get_all()
+            apikey_and_interests = [(self.api_key, kw, t) for kw, t in all_interests]
+            if MULTIPROC:
+                cpus = max(1, os.cpu_count() - 1)
+                with Pool(cpus) as p:
+                    for res in p.map(get_tailored_news_multiproc, apikey_and_interests):
+                        news.extend(res)
+                    p.close()
+                    p.terminate()
             else:
-                data = self._kw_search(kw)
-            news.extend([NewsItem(x, t) for x in data[:5]])   # limiting to 5 article per topic
-        random.shuffle(news)
-        return News(news[:limit], 'Tailor')
+                for kw, t in all_interests:
+                    if DEV:   # PREVENTS CALLING THE API WHEN DEVELOPING
+                        data = dummy_data['articles']
+                    else:
+                        data = self._kw_search(kw)
+                    news.extend([NewsItem(x, t) for x in data[:5]])   # limiting to 5 article per topic
+
+            random.shuffle(news)
+            print("news")
+            print(news)
+            return News(news[:limit], 'Tailor')
+        except NewsAPIException:
+            raise ExhaustedDailyQuotaException('Too many Requests were made today, reached daily limit of 50.')
 
     def testing(self) -> News:
         """Used for testing the API"""

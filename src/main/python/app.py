@@ -6,7 +6,7 @@ from flask import Flask, render_template
 
 from logging_conf import setup
 from news.news_site.api.news_api.key import get_key
-from news.news_site.api.news_api.main import Client
+from news.news_site.api.news_api.main import Client, ExhaustedDailyQuotaException
 
 TEMPLATE_FOLDER = os.getenv('TEMPLATE_FOLDER', '../docker/templates')
 STATIC_FOLDER = os.getenv('STATIC_FOLDER', '/static')
@@ -30,14 +30,20 @@ def index():
 
 @app.route('/headlines', methods=['GET'])
 def headlines():
-    client.get_news().to_html_to_file(Path(f'{TEMPLATE_FOLDER}/headlines.html'))
-    return render_template("headlines.html")
+    try:
+        client.get_news().to_html_to_file(Path(f'{TEMPLATE_FOLDER}/headlines.html'))
+        return render_template("headlines.html")
+    except ExhaustedDailyQuotaException:
+        return render_template("exhausted_quota.html")
 
 
 @app.route('/tailor', methods=['GET'])
 def tailor():
-    client.tailored_news().to_html_to_file(Path(f'{TEMPLATE_FOLDER}/tailor.html'))
-    return render_template("tailor.html")
+    try:
+        client.tailored_news().to_html_to_file(Path(f'{TEMPLATE_FOLDER}/tailor.html'))
+        return render_template("tailor.html")
+    except ExhaustedDailyQuotaException:
+        return render_template("exhausted_quota.html")
 
 
 # USED FOR TESTING
@@ -48,4 +54,4 @@ def test():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8088)))

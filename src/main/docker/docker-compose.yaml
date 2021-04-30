@@ -1,20 +1,42 @@
 version: '3.1'
 
 services:
-  minio:
+  app:
     image: underload:1.0.dev0
     restart: always
     environment:
-      MYKEY: myval
+      DEV: False
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: DUpp9ftnTvy6dr9AYJUZg2qRK63QP2rLHYCC
+      MONGO_INITDB_DATABASE: underload
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/"]
       interval: 30s
       timeout: 20s
       retries: 3
     ports:
-      - 5000:5000
+      - 8080:8080
     volumes:
       - /Users/eliott.legendre/Desktop/test_mount/:/mnt/
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: DUpp9ftnTvy6dr9AYJUZg2qRK63QP2rLHYCC
+      MONGO_INITDB_DATABASE: underload
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8082:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: DUpp9ftnTvy6dr9AYJUZg2qRK63QP2rLHYCC
 
 
 # docker run -p 5000:5000 -v /Users/eliott.legendre/Desktop/test_mount/:/mnt/ underload:1.0.dev0

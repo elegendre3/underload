@@ -20,12 +20,14 @@ ENG:
 -- speeding up tailor search and-or cache
 -- need to do smthg.. more interests will mean more searches, not viable
 -- Filtering headlines? Replacing tailor..? ...
+-- multiproc queries..? use all available cores
 
 - Persistence of interests in Mongo DB .. and articles..?
 -> Track age and articles, and requests/day?
 
-
-- Quick user auth  (how do you deal with the API key..? Make them sign up?)
+- Mongo DB (docker-compose)
+-- store users, keys and interests
+-- Quick user auth + NewAPI sign up link to get and store API Key
 - -> Interests page render?
 
 

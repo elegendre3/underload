@@ -23,6 +23,7 @@ def set_properties(project):
     project.depends_on('html5lib')
     project.depends_on('json-logging')
     project.depends_on('pyyaml')
+    project.depends_on('pymongo')
 
     project.depends_on('newsapi-python')
 
