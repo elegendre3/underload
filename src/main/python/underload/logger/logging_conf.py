@@ -47,7 +47,7 @@ def setup(json_enabled: bool, config_path: Path = None):
             logging.config.dictConfig(yaml_load(config_path.open('r')))
         else:
             logging.config.dictConfig(CONFIG_YML)
-            tolog.append("No config was found, using RAVNML default.")
+            tolog.append("No config was found, using default.")
 
     # Configure root logger
     logger = logging.getLogger("")
@@ -59,7 +59,7 @@ def setup(json_enabled: bool, config_path: Path = None):
         logger.info(m)
 
 
-def _get_ravnml_headers(*args):
+def _get_specific_headers(*args):
     extra_fields = {}
 
     default_headers = {
@@ -99,10 +99,10 @@ def _get_ravnml_headers(*args):
     return extra_fields
 
 
-def _get_ravnml_env_vars():
+def _get_prefixed_env_vars():
     import os
 
-    prefix = 'ravnml_'
+    prefix = 'prefixed_'
     pattern = '^{}(.+)'.format(prefix)
 
     extra_fields = {}
@@ -118,12 +118,12 @@ def _get_ravnml_env_vars():
 
 class ContextFilter(logging.Filter):
     def filter(self, record):
-        ravnml_headers = _get_ravnml_headers()
-        ravnml_env_vars = _get_ravnml_env_vars()
+        my_headers = _get_specific_headers()
+        my_env_vars = _get_prefixed_env_vars()
         if hasattr(record, 'props'):
-            record.props = {**record.props, **ravnml_headers, **ravnml_env_vars}
+            record.props = {**record.props, **my_headers, **my_env_vars}
         else:
-            record.props = {**ravnml_headers, **ravnml_env_vars}
+            record.props = {**my_headers, **my_env_vars}
         return True
 
 
@@ -185,6 +185,6 @@ class CustomJSONFormatter(logging.Formatter):
 if __name__ == "__main__":
     setup(json_enabled=True)
 
-    main_logger = logging.getLogger("ravnml")
-    main_logger.debug("Test - ravnml")
-    main_logger.info("Test - ravnml")
+    main_logger = logging.getLogger("test_logger")
+    main_logger.debug("Test - logger")
+    main_logger.info("Test - logger")
