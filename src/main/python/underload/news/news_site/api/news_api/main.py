@@ -7,9 +7,9 @@ from typing import Dict, List, Tuple
 
 from newsapi import NewsApiClient
 
-from news.news_site.api.news_api.key import get_key
-from helpers.html import Styler
-from helpers.interests import Interests
+from underload.news.news_site.api.news_api.key import get_key
+from underload.helpers import Styler
+from underload.helpers import Interests
 
 DEV = False
 

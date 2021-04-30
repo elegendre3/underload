@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   minio:
-    image: underload:1.0.dev0
+    image: underload:0.0.1
     restart: always
     environment:
       MYKEY: myval
@@ -12,7 +12,7 @@ services:
       timeout: 20s
       retries: 3
     ports:
-      - 5000:5000
+      - 8080:8080
     volumes:
       - /Users/eliott.legendre/Desktop/test_mount/:/mnt/
 
